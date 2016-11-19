@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace命名空间,作用就是对sql进行分类化管理,理解sql隔离
+注意:使用mapper代理方法开发,namespace有特殊重要的作用,namespace等于mapper接口地址-->
+<mapper namespace="com.qxx.dao.UserDao">
+
+    <!--mapper作用:为DAO接口方法提供sql语句配置-->
+
+    <insert id="createUser" parameterType="UserEntity">
+        INSERT INTO user (nickname,username,password,first_name,last_name,email,phone,salt)
+        VALUES (#{nickname},#{username},#{password},#{firstName},#{lastName},#{email},#{phone},#{salt})
+    </insert>
+
+    <delete id="deleteUserById" parameterType="long">
+        DELETE FROM user
+        WHERE id=#{id}
+    </delete>
+
+    <update id="updateUserInfo" parameterType="UserEntity">
+        UPDATE user
+        SET nickname=#{nickname},first_name=#{firstName},last_name=#{lastName},email=#{email},phone=#{phone}
+        WHERE id=#{id}
+    </update>
+
+    <update id="updateUserPassword" parameterType="UserEntity">
+        UPDATE user
+        SET password=#{password}
+        WHERE id=#{id}
+    </update>
+
+    <select id="getUserById" parameterType="long" resultType="UserEntity">
+        SELECT * FROM user
+        WHERE id=#{id}
+    </select>
+
+    <select id="getUserByNickname" parameterType="String" resultType="UserEntity">
+        SELECT * FROM user
+        WHERE nickname=#{nickname}
+    </select>
+
+    <select id="getUserByUsername" parameterType="String" resultType="UserEntity">
+        SELECT * FROM user
+        WHERE username=#{username} limit 1
+    </select>
+
+    <select id="getUserByLoginInfo" parameterType="UserEntity" resultType="UserEntity">
+        SELECT * FROM user
+        WHERE username=#{username} AND password = #{password} limit 1
+    </select>
+
+    <!-- List<User> getUsers(int offset,int limit);-->
+    <select id="getUsers" resultType="UserEntity">
+        SELECT *
+        FROM user
+        ORDER BY id
+        limit #{offset},#{limit}
+    </select>
+
+</mapper>
